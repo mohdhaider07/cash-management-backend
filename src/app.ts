@@ -16,7 +16,12 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-const whitelist = ["http://localhost:5173"];
+const whitelist = [
+  "http://localhost:5173",
+  "https://cash-management-lyart.vercel.app/",
+  "https://www.cash-management-frontend.vercel.app",
+  ,
+];
 
 const corsOptions = {
   origin: function (origin: any, callback: any) {
