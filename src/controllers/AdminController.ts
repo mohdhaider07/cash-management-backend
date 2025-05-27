@@ -134,9 +134,17 @@ export const employeePaymentReport = asyncRequestHandler(
 
     // Flatten and paginate
     const flatReport = report.flat();
+    const total = flatReport.length;
     const paginated = flatReport.slice(skip, skip + Number(limit));
+    const totalPages = Math.ceil(total / Number(limit));
 
-    res.status(200).json({ report: paginated });
+    res.status(200).json({
+      report: paginated,
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages,
+    });
   }
 );
 
