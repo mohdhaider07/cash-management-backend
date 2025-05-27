@@ -18,7 +18,7 @@ const app = express();
 app.use(express.json());
 const whitelist = [
   "http://localhost:5173",
-  "https://cash-management-lyart.vercel.app/",
+  "https://cash-management-lyart.vercel.app",
   "https://www.cash-management-frontend.vercel.app",
   ,
 ];
