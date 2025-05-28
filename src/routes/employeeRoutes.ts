@@ -4,6 +4,7 @@ import { authorize } from "../middlewares/authMiddleware";
 import { UserRole } from "../enums/Role";
 
 const router = Router();
+// Middleware to authorize access to employee routes
 router.use(authorize([UserRole.ADMIN]));
 
 router

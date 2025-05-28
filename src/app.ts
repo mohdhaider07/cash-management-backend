@@ -10,6 +10,7 @@ import employeeRoutes from "./routes/employeeRoutes";
 import adminRoutes from "./routes/adminRoutes";
 
 import connectDB from "./config/db";
+import errorHandler from "./middlewares/errorMiddleware";
 
 dotenv.config();
 const app = express();
@@ -49,6 +50,8 @@ app.use("/api/collections", collectionRoutes);
 app.use("/api/deposits", depositRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/admin", adminRoutes);
+
+app.use(errorHandler);
 
 app.get("/", (req, res) => {
   res.send("API is running....");
