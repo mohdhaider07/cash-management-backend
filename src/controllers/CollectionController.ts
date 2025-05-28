@@ -38,6 +38,7 @@ export const createCollectionWithAllocation = asyncRequestHandler(
         { $group: { _id: null, total: { $sum: "$amount" } } },
       ]);
 
+      // the amount which is already allocated to this collection
       const allocatedAmount =
         totalAllocated.length > 0 ? totalAllocated[0].total : 0;
       const remainingCollectionAmount =
@@ -45,23 +46,24 @@ export const createCollectionWithAllocation = asyncRequestHandler(
 
       if (remainingCollectionAmount <= 0) break;
 
+      console.log("remainingCollectionAmount", remainingCollectionAmount);
+      console.log("deposit.amount", deposit.amount);
       const allocationAmount = Math.min(
         remainingCollectionAmount,
         deposit.amount
       );
 
-      // Update deposit
-      deposit.amount -= allocationAmount;
+      console.log(
+        "allocationAmount is rmeoved fromt he depsite",
+        deposit.amount
+      );
 
       // If the deposit is fully allocated to this collection
-      if (deposit.amount === 0) {
-        deposit.collectionId = collection._id;
-        await deposit.save();
-      } else {
+      if (deposit.amount > remainingCollectionAmount) {
         // If the deposit amount exceeds the collection amount
         await Deposit.create({
           employeeId: deposit.employeeId,
-          amount: deposit.amount, // Remaining unallocated amount
+          amount: deposit.amount - allocationAmount, // Remaining unallocated amount
           depositDate: deposit.depositDate,
           collectionId: null, // No collection reference
         });
@@ -70,10 +72,14 @@ export const createCollectionWithAllocation = asyncRequestHandler(
         deposit.amount = allocationAmount;
         deposit.collectionId = collection._id;
         await deposit.save();
+      } else {
+        // if the deposite is less than or equal to the collection amount
+        deposit.collectionId = collection._id;
+        await deposit.save();
       }
 
       // Mark collection as cleared if fully allocated
-      if (remainingCollectionAmount === allocationAmount) {
+      if (remainingCollectionAmount == allocationAmount) {
         collection.cleared = true;
         await collection.save();
       }
